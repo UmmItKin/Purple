@@ -25,7 +25,7 @@
 
 	onMount(() => {
 		updateUptime();
-		interval = setInterval(updateUptime, 1000);
+		interval = setInterval(updateUptime, 250);
 	});
 
 	onDestroy(() => {

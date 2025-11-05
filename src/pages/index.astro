@@ -244,6 +244,13 @@ const normalizeAuthors = (author: any) => {
 		<Footer />
 
 		<script define:vars={{ posts: litePosts, POSTS_PER_PAGE }}>
+			// Extract date formatter outside of initHomePage for reuse
+			const dateFormatter = new Intl.DateTimeFormat('en-US', {
+				year: 'numeric',
+				month: 'short',
+				day: 'numeric'
+			});
+
 			function initHomePage() {
 				if (document.body.dataset.homeInitialized) return;
 				document.body.dataset.homeInitialized = 'true';
@@ -263,11 +270,7 @@ const normalizeAuthors = (author: any) => {
 				}
 
 				function formatDate(date) {
-					return new Date(date).toLocaleDateString('en-US', {
-						year: 'numeric',
-						month: 'short',
-						day: 'numeric'
-					});
+					return dateFormatter.format(new Date(date));
 				}
 
 				function createPostCard(post, index) {
@@ -401,21 +404,34 @@ const normalizeAuthors = (author: any) => {
 				}
 
 				let scrollTimeout;
+				let isScrolling = false;
+				
 				const scrollHandler = function() {
+					if (isScrolling) return;
+					
+					isScrolling = true;
 					clearTimeout(scrollTimeout);
+					
 					scrollTimeout = setTimeout(function() {
-						if (isLoading) return;
-						
-						try {
-							const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-							if (scrollTop + clientHeight >= scrollHeight - 800) {
-								if (loadMoreBtn && loadMoreBtn.style.display !== 'none') {
-									loadMorePosts();
-								}
-							}
-						} catch (error) {
-							console.warn('Scroll handler error:', error);
+						if (isLoading) {
+							isScrolling = false;
+							return;
 						}
+						
+						requestAnimationFrame(() => {
+							try {
+								const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+								if (scrollTop + clientHeight >= scrollHeight - 800) {
+									if (loadMoreBtn && loadMoreBtn.style.display !== 'none') {
+										loadMorePosts();
+									}
+								}
+							} catch (error) {
+								console.warn('Scroll handler error:', error);
+							} finally {
+								isScrolling = false;
+							}
+						});
 					}, 100);
 				};
 				window.addEventListener('scroll', scrollHandler, { passive: true });
@@ -460,17 +476,27 @@ const normalizeAuthors = (author: any) => {
 					if (finalCount > 0) {
 						let currentCount = 0;
 						countElement.textContent = '0';
+						
+						// Use requestAnimationFrame for smoother animation
+						const startTime = Date.now();
+						const duration = Math.min(finalCount * 100, 2000); // Cap at 2 seconds
+						
 						const updateCount = () => {
-							if (currentCount < finalCount) {
-								currentCount++;
-								countElement.textContent = currentCount;
-								setTimeout(updateCount, 100);
+							const elapsed = Date.now() - startTime;
+							const progress = Math.min(elapsed / duration, 1);
+							currentCount = Math.floor(progress * finalCount);
+							
+							countElement.textContent = currentCount;
+							
+							if (progress < 1) {
+								requestAnimationFrame(updateCount);
 							} else {
+								countElement.textContent = finalCount;
 								addCursor();
 								setStatusMessage();
 							}
 						};
-						setTimeout(updateCount, 300);
+						setTimeout(() => requestAnimationFrame(updateCount), 300);
 					} else {
 						countElement.textContent = '0';
 						addCursor();
