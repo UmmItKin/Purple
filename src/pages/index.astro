@@ -407,7 +407,7 @@ const normalizeAuthors = (author: any) => {
 				let isScrolling = false;
 				
 				const scrollHandler = function() {
-					if (isScrolling) return;
+					if (isScrolling || isLoading) return;
 					
 					isScrolling = true;
 					clearTimeout(scrollTimeout);
@@ -422,7 +422,7 @@ const normalizeAuthors = (author: any) => {
 							try {
 								const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 								if (scrollTop + clientHeight >= scrollHeight - 800) {
-									if (loadMoreBtn && loadMoreBtn.style.display !== 'none') {
+									if (loadMoreBtn && loadMoreBtn.style.display !== 'none' && !isLoading) {
 										loadMorePosts();
 									}
 								}

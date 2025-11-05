@@ -6,7 +6,7 @@
 		// Find all pre tags that haven't been processed yet
 		const unprocessedBlocks = document.querySelectorAll('.prose-content pre:not([data-processed])');
 		
-		// Use DocumentFragment for batch DOM operations
+		// Process each unprocessed code block
 		unprocessedBlocks.forEach(preEl => {
 			preEl.setAttribute('data-processed', 'true');
 			const codeEl = preEl.querySelector('code');
