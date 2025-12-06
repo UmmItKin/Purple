@@ -9,21 +9,21 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
-    "@astrojs/rss": "^4.0.12",
-    "@astrojs/sitemap": "^3.4.1",
-    "@astrojs/svelte": "^7.1.0",
+    "@astrojs/mdx": "^4.3.12",
+    "@astrojs/rss": "^4.0.14",
+    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/svelte": "^7.2.2",
     "@astrojs/tailwind": "^6.0.2",
-    "@tailwindcss/vite": "^4.1.11",
-    "astro": "^5.11.0",
-    "iconify-icon": "^3.0.0",
-    "sharp": "^0.34.2",
-    "svelte": "^5.36.14",
-    "tailwindcss": "^4.1.11",
-    "typescript": "^5.8.3"
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.16.4",
+    "iconify-icon": "^3.0.2",
+    "sharp": "^0.34.5",
+    "svelte": "^5.45.6",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
-    "autoprefixer": "^10.4.21"
+    "@tailwindcss/typography": "^0.5.19",
+    "autoprefixer": "^10.4.22"
   }
 }
