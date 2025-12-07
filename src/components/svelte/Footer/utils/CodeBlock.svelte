@@ -4,7 +4,10 @@
 
 	function initializeCodeBlocks() {
 		// Find all pre tags that haven't been processed yet
-		document.querySelectorAll('.prose-content pre:not([data-processed])').forEach(preEl => {
+		const unprocessedBlocks = document.querySelectorAll('.prose-content pre:not([data-processed])');
+		
+		// Process each unprocessed code block
+		unprocessedBlocks.forEach(preEl => {
 			preEl.setAttribute('data-processed', 'true');
 			const codeEl = preEl.querySelector('code');
 			if (!codeEl) return;
@@ -14,15 +17,15 @@
 			const lines = (codeText.endsWith('\n') ? codeText.slice(0, -1) : codeText).split('\n');
 			const lineCount = lines.length;
 
+			// Build line numbers HTML string for better performance
+			const lineNumbersHTML = Array.from({ length: lineCount }, (_, i) => 
+				`<div>${i + 1}</div>`
+			).join('');
+
 			const lineNumbersWrapper = document.createElement('div');
 			lineNumbersWrapper.className = 'line-numbers-wrapper';
 			lineNumbersWrapper.setAttribute('aria-hidden', 'true');
-
-			for (let i = 1; i <= lineCount; i++) {
-				const lineNumber = document.createElement('div');
-				lineNumber.textContent = i.toString();
-				lineNumbersWrapper.appendChild(lineNumber);
-			}
+			lineNumbersWrapper.innerHTML = lineNumbersHTML;
 
 			const container = document.createElement('div');
 			container.className = 'code-container';
